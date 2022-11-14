@@ -33,13 +33,14 @@ namespace FlightCalendar
             return true;
         }
 
-        public void Show()
+        public List<string> GetScheduledFlightsDescription()
         {
-            Console.WriteLine($"Flight schedule for {Date}. Scheduled flights:");
-            foreach (var flight in Flights)
+            var flightDescriptions = new List<string>();
+            foreach (var flight in this.Flights)
             {
-                flight.Show();
+                flightDescriptions.Add(flight.GetDescription());
             }
+            return flightDescriptions;
         }
     }
 }

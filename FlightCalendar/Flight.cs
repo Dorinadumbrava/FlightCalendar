@@ -8,7 +8,7 @@ namespace FlightCalendar
     public class Flight
     {
 
-        private string flightNumber;
+        private string bortNumber;
         private TimeSpan start;
         private TimeSpan duration;
 
@@ -21,7 +21,7 @@ namespace FlightCalendar
 
         public string BortNumber
         {
-            get => this.flightNumber;
+            get => this.bortNumber;
             set => SetFlightNumber(value);
         }
 
@@ -49,7 +49,7 @@ namespace FlightCalendar
             {
                 throw new System.ArgumentException($"Flight should have a number");
             }
-            this.flightNumber = topic;
+            this.bortNumber = topic;
         }
         private void SetDuration(TimeSpan duration)
         {
@@ -74,6 +74,10 @@ namespace FlightCalendar
             return (flight.Start >= this.Start && flight.start < this.End) ||
                 (flight.End > this.Start && flight.End <= this.End) ||
                 (flight.Start <= this.Start && flight.End >= this.End);
+        }
+        public string GetDescription()
+        {
+            return $"{this.bortNumber}, {this.start} - {this.start + this.duration};";
         }
     }
 }

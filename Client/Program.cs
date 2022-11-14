@@ -11,6 +11,10 @@ schedule.TryAddFlight(flight1, out error);
 schedule.TryAddFlight(flight2, out error);
 schedule.TryAddFlight(flight3, out error);
 
-schedule.Show();
+var plan = schedule.GetScheduledFlightsDescription();
+foreach (var row in plan)
+{
+    Console.WriteLine(row);
+}
 Console.WriteLine(error);
 Console.ReadKey();
