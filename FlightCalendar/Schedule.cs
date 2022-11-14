@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace FlightCalendar
+﻿namespace FlightCalendar
 {
     //Flights should not overlap.
     public class Schedule
@@ -12,13 +8,12 @@ namespace FlightCalendar
             Date = date;
             Flights = new List<Flight>();
         }
+
         public DateTime Date { get; set; }
         public List<Flight> Flights { get; }
 
-        //UseResult
-        public bool TryAddFlight(Flight flight, out string error)
+        public Result AddFlight(Flight flight)
         {
-            error = "";
             if (flight is null)
             {
                 throw new
@@ -26,11 +21,10 @@ namespace FlightCalendar
             }
             if (Flights.Any(x => flight.Overlaps(x)))
             {
-                error = $"Overlaping flight: {flight.BortNumber}";
-                return false;
+                return Result.Failed($"Overlaping flight: {flight.BortNumber}");
             }
             Flights.Add(flight);
-            return true;
+            return Result.Success();
         }
 
         public List<string> GetScheduledFlightsDescription()

@@ -21,7 +21,7 @@ namespace FlightCalendarTests
         {
             var schedule = new Schedule(DateTime.Now);
 
-            Assert.Throws<ArgumentNullException>(() => schedule.TryAddFlight(null, out string error));
+            Assert.Throws<ArgumentNullException>(() => schedule.AddFlight(null));
         }
 
         [Theory]
@@ -29,16 +29,15 @@ namespace FlightCalendarTests
         [InlineData("4R 887", "12:0:01", "0:10:00", "", true)]
         public void TryAddInvalidFlightReturnsFalse(string topic, string start, string duration, string expectedError, bool expectedResult)
         {
-            string error = "";
             var schedule = new Schedule(DateTime.Now);
             var scheduledFlight = new Flight("10E 665", new TimeSpan(10, 15, 0), new TimeSpan(0, 10, 0));
-            schedule.TryAddFlight(scheduledFlight, out error);
+            schedule.AddFlight(scheduledFlight);
             var meeting = new Flight(topic, TimeSpan.Parse(start), TimeSpan.Parse(duration));
 
-            var result = schedule.TryAddFlight(meeting, out error);
+            var result = schedule.AddFlight(meeting);
 
-            Assert.Equal(expectedResult, result);
-            Assert.Equal(expectedError, error);
+            Assert.Equal(expectedResult, result.IsSuccess);
+            Assert.Equal(expectedError, result.Error);
         }
     }
 }
