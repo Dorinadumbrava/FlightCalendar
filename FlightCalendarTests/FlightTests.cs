@@ -1,4 +1,6 @@
 using FlightCalendar;
+using FluentAssertions;
+using FluentAssertions.Execution;
 using System;
 using Xunit;
 
@@ -6,6 +8,49 @@ namespace FlightCalendarTests
 {
     public class FlightTests
     {
+        [Theory]
+        [InlineData("", "8:0:0", "0:10:0", "Flight should have a number")]
+        [InlineData(" ", "8:0:0", "0:10:0", "Flight should have a number")]
+        [InlineData("B8 337", "0:0:0", "0:10:0", "Flight cannot start at 00:00:00")]
+        [InlineData("B8 337", "2:59:59", "0:10:0", "Flight cannot start at 02:59:59")]
+        [InlineData("B8 337", "23:45:01", "0:10:0", "Flight cannot start at 23:45:01")]
+        [InlineData("B8 337", "13:0:0", "0:0:0", "Invalid take-off duration (Parameter 'duration')")]
+        [InlineData("B8 337", "13:0:0", "0:4:59", "Invalid take-off duration (Parameter 'duration')")]
+        [InlineData("B8 337", "13:0:0", "0:15:01", "Invalid take-off duration (Parameter 'duration')")]
+        public void FlightDoesNotCreate_WithInvalidValues(string bortNumber, string start, string durationString, string error)
+        {
+            var duration = TimeSpan.Parse(durationString);
+            var startTime = TimeSpan.Parse(start);
+
+            Action act = () => new Flight(bortNumber, startTime, duration);
+            act.Should()
+                .Throw<ArgumentException>()
+                .WithMessage(error);
+        }
+
+        [Theory]
+        [InlineData("B8 337", "8:0:0", "0:10:0")]
+        [InlineData("B8 337", "3:0:0", "0:10:0")]
+        [InlineData("B8 337", "23:45:0", "0:15:0")]
+        [InlineData("B8 337", "13:0:0", "0:10:0")]
+        [InlineData("B8 337", "3:0:0", "0:5:0")]
+        [InlineData("B8 337", "17:0:0", "0:15:0")]
+        [InlineData("B8 337", "14:0:0", "0:10:0")]
+        public void FlightSuccessConstructor(string bortNumber, string start, string durationString)
+        {
+            var duration = TimeSpan.Parse(durationString);
+            var startTime = TimeSpan.Parse(start);
+
+            var flight = new Flight(bortNumber, startTime, duration);
+            using (new AssertionScope())
+            {
+                flight.Should().NotBeNull();
+                flight.BortNumber.Should().Be(bortNumber);
+                flight.Start.Should().Be(startTime);
+                flight.End.Should().Be(startTime + duration);
+            }
+        }
+
         [Theory]
         [InlineData("")]
         [InlineData(" ")]
