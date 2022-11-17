@@ -16,11 +16,6 @@
             reportItems.Add(record);
         }
 
-        public void AddRange(IEnumerable<ReportItem> records)
-        {
-            reportItems.AddRange(records);
-        }
-
         public void Remove(ReportItem record)
         {
             if (reportItems.Contains(record))

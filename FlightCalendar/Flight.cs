@@ -38,11 +38,6 @@ namespace FlightCalendar
 
         public TimeSpan End => this.start + this.duration;
 
-
-        internal void Show()
-        {
-            Console.WriteLine($"{BortNumber}, {Start} - {End};");
-        }
         private void SetFlightNumber(string topic)
         {
             if (string.IsNullOrWhiteSpace(topic))
