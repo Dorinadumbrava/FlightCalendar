@@ -7,9 +7,9 @@ var flight2 = new Flight("9U 877", new TimeSpan(13, 0, 0), new TimeSpan(0, 15, 0
 var flight3 = new Flight("10U 877", new TimeSpan(14, 0, 0), new TimeSpan(0, 15, 0));
 
 List<Result> results = new List<Result>();
-schedule.AddFlight(flight1);
-schedule.AddFlight(flight2);
-schedule.AddFlight(flight3);
+results.Add(schedule.AddFlight(flight1));
+results.Add(schedule.AddFlight(flight2));
+results.Add(schedule.AddFlight(flight3));
 
 var plan = schedule.GetScheduledFlightsDescription();
 foreach (var row in plan)
@@ -18,9 +18,8 @@ foreach (var row in plan)
 }
 foreach (var item in results)
 {
-	if (!item.IsSuccess)
-	{
-		Console.WriteLine(item.Error);
-	}
+    if (!item.IsSuccess)
+    {
+        Console.WriteLine(item.Error);
+    }
 }
-Console.ReadKey();
